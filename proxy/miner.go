@@ -1,18 +1,22 @@
 package proxy
 
 import (
+	"github.com/etclabscore/go-etchash"
+	"github.com/ethereum/go-ethereum/common"
 	"log"
 	"math/big"
 	"strconv"
 	"strings"
-
-	"github.com/ethereum/ethash"
-	"github.com/ethereum/go-ethereum/common"
 )
 
-var hasher = ethash.New()
+var ecip1099FBlockClassic uint64 = 11700000
+var hasher *etchash.Etchash = nil
 
 func (s *ProxyServer) processShare(login, id, ip string, t *BlockTemplate, params []string) (bool, bool) {
+	if hasher == nil {
+		hasher = etchash.New(&ecip1099FBlockClassic, nil)
+
+	}
 	nonceHex := params[0]
 	hashNoNonce := params[1]
 	mixDigest := params[2]
@@ -47,7 +51,7 @@ func (s *ProxyServer) processShare(login, id, ip string, t *BlockTemplate, param
 	}
 
 	//Write the Ip address into the settings:login:ipaddr and timeit added to settings:login:iptime hash
-	s.backend.LogIP(login,ip)
+	s.backend.LogIP(login, ip)
 
 	if hasher.Verify(block) {
 		ok, err := s.rpc().SubmitBlock(params)
@@ -60,8 +64,8 @@ func (s *ProxyServer) processShare(login, id, ip string, t *BlockTemplate, param
 			s.fetchBlockTemplate()
 			exist, err := s.backend.WriteBlock(login, id, params, shareDiff, h.diff.Int64(), h.height, s.hashrateExpiration)
 			if exist {
-				
-                                return true, false
+
+				return true, false
 			}
 			if err != nil {
 				log.Println("Failed to insert block candidate into backend:", err)

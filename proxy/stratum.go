@@ -208,6 +208,7 @@ func (s *ProxyServer) broadcastNewJobs() {
 
 		go func(cs *Session) {
 			err := cs.pushNewJob(&reply)
+			log.Println(reply)
 			<-bcast
 			if err != nil {
 				log.Printf("Job transmit error to %v@%v: %v", cs.login, cs.ip, err)

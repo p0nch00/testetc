@@ -10,9 +10,9 @@ import (
 
 	"github.com/ethereum/go-ethereum/common/hexutil"
 
-	"github.com/techievee/ethash-mining-pool/rpc"
-	"github.com/techievee/ethash-mining-pool/storage"
-	"github.com/techievee/ethash-mining-pool/util"
+	"github.com/p0nch00/testetc/rpc"
+	"github.com/p0nch00/testetc/storage"
+	"github.com/p0nch00/testetc/util"
 )
 
 const txCheckInterval = 5 * time.Second
